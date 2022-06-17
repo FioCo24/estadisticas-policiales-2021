@@ -1,0 +1,25 @@
+---
+title: "Estadísticas Policiales 2021"
+author: "Fiorella Cordero"
+date: '2022-06-17'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# **Tarea 2**
+
+### **Carga de Paquetes**
+
+Se hace uso de los paquetes DT para crear la tabla y de ggplot2 para crear los gráficos. 
+
+```{r carga de paquetes, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(DT)
+```
+
+### Tabla
+
