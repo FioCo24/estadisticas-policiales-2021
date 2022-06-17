@@ -55,3 +55,31 @@ datos_policiales %>%
 
 ```
 
+### Gráficos
+
+#### Gráfico 1
+
+```{r}
+
+# Gráfico de líneas con cantidad por cada Delito
+
+grafico_cantidad_delito <-
+  datos_policiales %>%
+  count(Delito) %>% 
+  ggplot(aes(x = reorder(Delito, n), y = n)) +
+  geom_bar(stat = "identity") +
+  ggtitle("Cantidad de Delitos cometidos en Costa Rica - 2021") +
+  xlab("Tipo de Delito") +
+  ylab("Cantidad de Delitos") +
+  coord_flip() +
+  theme_get()
+  
+  
+# Gráfico plotly
+
+grafico_cantidad_delito %>%
+  ggplotly() %>% 
+  config(locale = 'es')
+
+```
+
