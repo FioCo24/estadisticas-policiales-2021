@@ -16,10 +16,42 @@ Se hace uso de los paquetes DT para crear la tabla y de ggplot2 para crear los g
 
 ```{r carga de paquetes, message=FALSE}
 library(dplyr)
+library(readr)
 library(ggplot2)
 library(plotly)
 library(DT)
+library(readxl)
 ```
 
 ### Tabla
+
+```{r Carga}
+
+# Carga
+
+datos_policiales <-
+  read_excel("C:/Users/Fiorela/Downloads/estadisticaspoliciales2021.xls")
+
+```
+
+```{r Transformación}
+
+# Transformación
+
+datos_policiales <-
+  datos_policiales %>%
+  select(Delito, Fecha, "Víctima" = Victima, Edad, "Género" = Genero, Provincia, "Cantón" = Canton) %>%
+  mutate(Fecha = as.Date(Fecha, format = "%d/%m/%Y"))
+
+```
+
+```{r Visualización}
+
+# Visualización Tabular
+
+datos_policiales %>%
+  datatable(options = list(pageLength = 10,
+    language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json')))
+
+```
 
