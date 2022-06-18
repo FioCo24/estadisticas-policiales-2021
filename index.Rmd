@@ -33,6 +33,13 @@ datos_policiales <-
   read_excel("C:/Users/Fiorela/Downloads/estadisticaspoliciales2021.xls")
 
 ```
+#### Curación de Datos
+
+```{r}
+
+datos_policiales$Fecha <- as.Date(datos_policiales$Fecha, format = "%d/%m/%Y")
+
+```
 
 ```{r Transformación}
 
@@ -61,7 +68,7 @@ datos_policiales %>%
 
 ```{r}
 
-# Gráfico de líneas con cantidad por cada Delito
+# Gráfico de barras simples con cantidad de cada Delito
 
 grafico_cantidad_delito <-
   datos_policiales %>%
@@ -74,12 +81,78 @@ grafico_cantidad_delito <-
   coord_flip() +
   theme_get()
   
-  
+
 # Gráfico plotly
 
 grafico_cantidad_delito %>%
   ggplotly() %>% 
   config(locale = 'es')
+
+```
+
+#### Gráfico 2
+
+```{r}
+
+# Gráfico de barras simples con delitos cometidos por mes
+
+grafico_delitos_por_mes <-
+datos_policiales %>%
+  ggplot(aes(x = reorder(Delito, Fecha), y = (format(Fecha, "%m")))) +
+  geom_bar(stat = "identity") +
+  ggtitle("Delitos cometidos por mes en Costa Rica - 2021") +
+  xlab("Tipo de Delito") +
+  ylab("Mes") +
+  coord_flip() +
+  theme_get()
+
+
+# Gráfico plotly
+
+grafico_delitos_por_mes %>%
+  ggplotly() %>% 
+  config(locale = 'es')
+
+```
+
+#### Gráfico 3
+
+```{r}
+
+# Gráfico de barras apiladas de proporción
+
+proporcion_delitos_genero <-
+  datos_policiales %>%
+  ggplot(aes(x = Delito, fill = Género)) +
+  geom_bar(position = "fill") +
+  ggtitle("Proporciones de delitos por género") +
+  xlab("Tipo de delito") +
+  ylab("Proporción") +
+  labs(fill = "Género") +
+  coord_flip() +
+  theme_get()
+
+ggplotly(proporcion_delitos_genero) %>% config(locale = 'es')
+
+```
+
+#### Gráfico 4
+
+```{r}
+
+# Gráfico de barras con cantidad de delito por provincia
+
+grafico_delitos_provincias <-
+datos_policiales %>%
+  ggplot(aes(x = Delito, y = Provincia)) +
+  geom_bar() +
+  ggtitle("Cantidad de delitos por provincias") +
+  xlab("Tipo de Delito") +
+  ylab("Provincia") +
+  coord_flip() +
+  theme_get()
+
+ggplotly(grafico_delitos_provincias) %>% config(locale = 'es')
 
 ```
 
