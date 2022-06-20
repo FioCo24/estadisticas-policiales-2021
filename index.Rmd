@@ -1,6 +1,6 @@
 ---
 title: "Estadísticas Policiales 2021"
-author: "Fiorella Cordero"
+author: "Fiorella Cordero Obando C12294"
 date: '2022-06-17'
 output: 
   html_document:
@@ -110,6 +110,7 @@ datos_policiales <-
   mutate(mes = format(Fecha, "%B")) %>%
   select(Delito, Fecha, Víctima, Edad, Género, Provincia, Cantón, mes) %>%
   mutate(Fecha = as.Date(Fecha, format = "%d/%m/%Y"))
+
 
 grafico_delitos_por_mes <-
   datos_policiales %>%
