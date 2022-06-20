@@ -2,7 +2,13 @@
 title: "Estadísticas Policiales 2021"
 author: "Fiorella Cordero"
 date: '2022-06-17'
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -21,9 +27,13 @@ library(ggplot2)
 library(plotly)
 library(DT)
 library(readxl)
+library(graphics)
+library(stats)
 ```
 
-### Tabla
+### Tabla  
+
+La tabla muestra las columnas: Delito, Fecha, Víctima, Edad, Género, Provincia y Cantón. Extraídos del conjunto de datos de estadísticas policiales del 2021 en Costa Rica.
 
 ```{r Carga}
 
@@ -33,9 +43,8 @@ datos_policiales <-
   read_excel("C:/Users/Fiorela/Downloads/estadisticaspoliciales2021.xls")
 
 ```
-#### Curación de Datos
 
-```{r}
+```{r Curación}
 
 datos_policiales$Fecha <- as.Date(datos_policiales$Fecha, format = "%d/%m/%Y")
 
@@ -96,13 +105,19 @@ grafico_cantidad_delito %>%
 
 # Gráfico de barras simples con delitos cometidos por mes
 
+datos_policiales <-
+  datos_policiales %>%
+  mutate(mes = format(Fecha, "%B")) %>%
+  select(Delito, Fecha, Víctima, Edad, Género, Provincia, Cantón, mes) %>%
+  mutate(Fecha = as.Date(Fecha, format = "%d/%m/%Y"))
+
 grafico_delitos_por_mes <-
-datos_policiales %>%
-  ggplot(aes(x = reorder(Delito, Fecha), y = (format(Fecha, "%m")))) +
-  geom_bar(stat = "identity") +
+  datos_policiales %>%
+  ggplot(aes(x = mes)) +
+  geom_bar() +
   ggtitle("Delitos cometidos por mes en Costa Rica - 2021") +
-  xlab("Tipo de Delito") +
-  ylab("Mes") +
+  xlab("Meses") +
+  ylab("Cantidad de Delitos") +
   coord_flip() +
   theme_get()
 
@@ -125,34 +140,40 @@ proporcion_delitos_genero <-
   datos_policiales %>%
   ggplot(aes(x = Delito, fill = Género)) +
   geom_bar(position = "fill") +
-  ggtitle("Proporciones de delitos por género") +
+  ggtitle("Proporciones de delitos por género en Costa Rica - 2021") +
   xlab("Tipo de delito") +
   ylab("Proporción") +
   labs(fill = "Género") +
   coord_flip() +
   theme_get()
 
-ggplotly(proporcion_delitos_genero) %>% config(locale = 'es')
-
+proporcion_delitos_genero %>%
+  ggplotly() %>% 
+  config(locale = 'es')
 ```
 
 #### Gráfico 4
 
 ```{r}
 
-# Gráfico de barras con cantidad de delito por provincia
+# Gráfico de barras con cantidad de delito por cantón
 
-grafico_delitos_provincias <-
-datos_policiales %>%
-  ggplot(aes(x = Delito, y = Provincia)) +
+grafico_cantones <-
+  filter(datos_policiales,
+         grepl('HEREDIA|ALAJUELA|CARTAGO|SAN JOSE', Cantón))
+  
+  
+grafico_delitos_canton <-
+  ggplot(data = grafico_cantones, aes(x = Cantón)) +
   geom_bar() +
-  ggtitle("Cantidad de delitos por provincias") +
-  xlab("Tipo de Delito") +
-  ylab("Provincia") +
-  coord_flip() +
+  ggtitle("Cantidad de delitos por cantón en Costa Rica - 2021") +
+  xlab("Cantones") +
+  ylab("Cantidad de Delitos") +
   theme_get()
 
-ggplotly(grafico_delitos_provincias) %>% config(locale = 'es')
+grafico_delitos_canton %>%
+  ggplotly() %>% 
+  config(locale = 'es')
 
 ```
 
